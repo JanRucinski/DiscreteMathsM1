@@ -49,19 +49,24 @@ import random
 
 # Function to generate a random graph
 def generate_random_graph(nodes, edges):
-    graph = {i: {} for i in range(nodes)}
+    graph = {node: {} for node in range(nodes)}
     for _ in range(edges):
         node1 = random.randint(0, nodes - 1)
         node2 = random.randint(0, nodes - 1)
-        weight = random.randint(1, 10)  # Random weight between 1 and 10
+        weight = random.randint(1, 100)
         graph[node1][node2] = weight
     return graph
 
+# test data
+nodes = [200, 200, 400, 100]
+edges = [1000, 200, 16000, 1000]
+
 # Test the algorithms
-def test_algorithms():
+def test_iterations():
     # Test different graph sizes
-    for size in [10, 50, 100, 500, 1000]:
-        graph = generate_random_graph(size, size * 2)  # Roughly 2 * number of nodes for edges
+    x=0
+    for size in nodes:
+        graph = generate_random_graph(size, edges[x])
         start_node = random.randint(0, size - 1)
         
         # Measure Dijkstra's execution time
@@ -74,7 +79,23 @@ def test_algorithms():
         bellman_ford(graph, start_node)
         bellman_ford_time = (time.time() - start_time) * 1000  # Convert to milliseconds
         
-        print(f"Graph Size: {size}, Dijkstra Time: {dijkstra_time:.2f} ms, Bellman-Ford Time: {bellman_ford_time:.2f} ms")
+        # print nodes/edges and execution time
+        print(f"Nodes: {size}, Edges: {edges[nodes.index(size)]}")
+        print(f"Dijkstra | Bellman-Ford time: {dijkstra_time:.2f} | {bellman_ford_time:.2f} ms")
+
+        # create a new line in a csv file with results
+        # with open('results.csv', 'a') as f:
+        #     f.write(f"{size},{edges[x]},{dijkstra_time:.2f},{bellman_ford_time:.2f}\n")
+        x+=1
+
+def test_algorithms(times):
+    with open('results.csv', 'w') as f:
+        f.write("Nodes,Edges,Dijkstra,Bellman-Ford\n")
+
+    for _ in range(times):
+        test_iterations()
 
 # Run the test
-test_algorithms()
+# test_algorithms(20)
+# test_iterations()
+# print("Test completed")
